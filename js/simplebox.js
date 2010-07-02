@@ -1,8 +1,9 @@
 /* Copyright (c) 2010 Arnaud Renevier, Inc, published under the modified BSD
  * license. */
 
-var SimpleBox = Class.create();
-SimpleBox.prototype = {
+var SimpleBox = Class.create({
+    options: null,
+
     /*
      * elt: element to wrap in a lightbox.
      * options: configuration object. possible properties are:
@@ -165,4 +166,4 @@ SimpleBox.prototype = {
         return new Element("input", { type: "image", src: imgsrc, alt: "X"}).setStyle(style);
     }
 
-};
+});
