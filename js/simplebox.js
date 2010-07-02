@@ -3,9 +3,6 @@
 
 var SimpleBox = Class.create();
 SimpleBox.prototype = {
-    options: {},
-    root: null,
-
     /*
      * elt: element to wrap in a lightbox.
      * options: configuration object. possible properties are:
@@ -21,7 +18,7 @@ SimpleBox.prototype = {
      *          default methods are "onbutton" and "onescapekey"
      */
     initialize: function(elt, options) {
-        this.options = Object.extend(this.options, options);
+        this.options = Object.extend({}, options);
         this.register(elt);
     },
 
