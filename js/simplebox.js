@@ -8,8 +8,6 @@ var SimpleBox = Class.create({
      * elt: element to wrap in a lightbox.
      * options: configuration object. possible properties are:
      *       opacity: background opacity when lightbox is shown (default is "0.3")
-     *       showCallback:      function to call after lightbox was shown
-     *       hideCallback:      function to call after lightbox was hidden
      *       closeMethods: an array containing list of methods used to close lightbox
      *          methods can be:
      *             "onbutton" insert a close buttons inside lightbox
@@ -95,11 +93,9 @@ var SimpleBox = Class.create({
             this.root.show();
             var availableHeight = document.viewport.getHeight();
             var elementHeight = this.element.measure('border-box-height');
-            this.padding.style.height = ((availableHeight - elementHeight) / 2).toString() + 'px';
             // update height because element height and viewport height may have changed
-            if (typeof this.options.showCallback == "function") {
-                this.options.showCallback.apply();
-            }
+            this.padding.style.height = ((availableHeight - elementHeight) / 2).toString() + 'px';
+            document.fire('simplebox:shown', this);
         }
     },
 
@@ -107,9 +103,7 @@ var SimpleBox = Class.create({
         if (this.root && this.root.visible()) {
             this.root.blur();
             this.root.hide();
-            if (typeof this.options.hideCallback == "function") {
-                this.options.hideCallback.apply();
-            }
+            document.fire('simplebox:hidden', this);
         }
     },
 
