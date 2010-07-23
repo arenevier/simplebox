@@ -56,7 +56,7 @@ var SimpleBox = Class.create({
 
         if (closeMethods.onescapekey) {
             document.observe("keydown", function(evt) { // we use keydown because keyup does not work in opera
-                if (evt.keyCode == Event.KEY_ESC && this.root.visible()) { // escape key closes lightbox
+                if (evt.keyCode === Event.KEY_ESC && this.root.visible()) { // escape key closes lightbox
                     this.hide();
                 }
             }.bindAsEventListener(this));
