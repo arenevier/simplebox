@@ -68,7 +68,7 @@ var SimpleBox = Class.create({
                     this.hide();
                     return;
                 }
-                var innerClick = (evt.target === element || evt.target.descendantOf(element));
+                var innerClick = (evt.target === element || $(evt.target).descendantOf(element));
                 if (closeMethods.oninnerclick && innerClick) {
                     this.hide();
                 } else if (closeMethods.onouterclick && (!innerClick)) {
