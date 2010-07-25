@@ -156,7 +156,7 @@ var SimpleBox = Class.create({
         };
         Object.extend(style, aStyle);
 
-        var imgsrc = this.options.closeBtnSrc || "icons/cancel.png";
+        var imgsrc = this.options.closeBtnSrc || "icons/close.png";
         return new Element("input", { type: "image", src: imgsrc, alt: "X"}).setStyle(style);
     }
 
