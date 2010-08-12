@@ -3,6 +3,9 @@
 
 var SimpleBox = Class.create({
     options: null,
+    // when using onescapekey, we need to track other opened boxes, so a
+    // kepress event can trigger close for the uppermost simplebox only
+    shownOver: 0,
 
     /*
      * elt: element to wrap in a lightbox.
@@ -57,7 +60,19 @@ var SimpleBox = Class.create({
         if (closeMethods.onescapekey) {
             document.observe("keyup", function(evt) { // we use keydown because keyup does not work in opera
                 if (evt.keyCode === Event.KEY_ESC && this.root.visible()) { // escape key closes lightbox
-                    this.hide();
+                    if (this.shownOver <= 0) {
+                        this.hide();
+                    }
+                }
+            }.bindAsEventListener(this));
+            document.observe('simplebox:shown', function(evt) {
+                if (this.root.visible() && evt.memo !== this) {
+                    this.shownOver++;
+                }
+            }.bindAsEventListener(this));
+            document.observe('simplebox:hidden', function(evt) {
+                if (this.root.visible() && evt.memo !== this) {
+                    this.shownOver--;
                 }
             }.bindAsEventListener(this));
         }
@@ -99,6 +114,7 @@ var SimpleBox = Class.create({
             this.padding.style.height = ((availableHeight - elementHeight) / 2).toString() + 'px';
             document.fire('simplebox:shown', this);
         }
+        this.shownOver = 0;
     },
 
     hide: function() {
