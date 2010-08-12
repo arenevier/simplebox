@@ -84,6 +84,7 @@ var SimpleBox = Class.create({
         root.insert(transparency).insert(padding).insert(element).hide();
 
         this.root = root;
+        this.transparency = transparency;
         this.element = element;
         this.padding = padding;
     },
@@ -92,6 +93,7 @@ var SimpleBox = Class.create({
         if (this.root && !(this.root.visible())) {
             this.root.show();
             var availableHeight = document.viewport.getHeight();
+            this.transparency.style.height = availableHeight;
             var elementHeight = this.element.measure('border-box-height');
             // update height because element height and viewport height may have changed
             this.padding.style.height = ((availableHeight - elementHeight) / 2).toString() + 'px';
@@ -123,7 +125,7 @@ var SimpleBox = Class.create({
     createTransparency: function (aStyle) {
         var style =  { // default transparency style
             zIndex: "-1",
-            position: "fixed",
+            position: "absolute",
             top: "0px",
             left: "0px",
             right: "0px",
