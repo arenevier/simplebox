@@ -167,7 +167,7 @@ var SimpleBox = Class.create({
 
     createCloseButton: function(aStyle) {
         var style = { // default close button style
-            float: "right",
+            'float': "right",
             margin: "2px",
             fontWeight: "bold",
             padding: "0px"
