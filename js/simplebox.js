@@ -21,16 +21,11 @@ class SimpleBox {
    */
   constructor(elt, options) {
     this.options = Object.assign({}, options);
-    this.register(elt);
+    this.initialize(elt);
   }
 
-  register(element) {
+  initialize(element) {
     element = this.identify(element);
-
-    const root = this.createWrapper(this.options.style);
-    const transparency = this.createTransparency({ opacity: this.options.opacity || "0.3" });
-
-    const padding = this.createPadding();
 
     let closeMethods = {};
     if (this.options.closeMethods && Object.isArray(this.options.closeMethods) && this.options.closeMethods.length !== 0) {
@@ -59,26 +54,26 @@ class SimpleBox {
 
     if (closeMethods.onescapekey) {
       document.addEventListener("keyup", (evt) => { // we use keydown because keyup does not work in opera
-        if (evt.key === "Escape" && this.rootVisible()) { // escape key closes lightbox
+        if (evt.key === "Escape" && this.isVisible()) { // escape key closes lightbox
           if (this.shownOver <= 0) {
             this.hide();
           }
         }
       });
       document.addEventListener('simplebox:shown', (evt) => {
-        if (this.rootVisible() && evt.detail !== this) {
+        if (this.isVisible() && evt.detail !== this) {
           this.shownOver++;
         }
       });
       document.addEventListener('simplebox:hidden', (evt) => {
-        if (this.rootVisible() && evt.detail !== this) {
+        if (this.isVisible() && evt.detail !== this) {
           this.shownOver--;
         }
       });
     }
 
     if (closeMethods.onouterclick || closeMethods.oninnerclick) {
-      root.addEventListener("click", (evt) => {
+      element.addEventListener("click", (evt) => {
         if (closeMethods.onouterclick && closeMethods.oninnerclick) {
           this.hide();
           return;
@@ -94,20 +89,8 @@ class SimpleBox {
       });
     }
 
-    element.blur();
-    if (element.parentNode) {
-      element.parentNode.replaceChild(root, element);
-    }
-
-    root.appendChild(transparency)
-    root.appendChild(padding)
-    root.appendChild(element)
-    root.style.display = "none";
-
-    this.root = root;
-    this.transparency = transparency;
     this.element = element;
-    this.padding = padding;
+    this.hide();
   }
 
   identify(element) {
@@ -118,13 +101,9 @@ class SimpleBox {
   }
 
   show() {
-    if (this.root && !(this.rootVisible())) {
-      this.root.style.display = "block";
-      const availableHeight = document.documentElement.clientHeight;
-      this.transparency.style.height = availableHeight;
-      const elementHeight = this.element.offsetHeight;
+    if (this.element && !(this.isVisible())) {
+      this.element.style.display = "block";
       // update height because element height and viewport height may have changed
-      this.padding.style.height = ((availableHeight - elementHeight) / 2).toString() + 'px';
       const customEvent = new CustomEvent('simplebox:show', { detail: this });
       document.dispatchEvent(customEvent);
     }
@@ -132,41 +111,12 @@ class SimpleBox {
   }
 
   hide() {
-    if (this.root && this.rootVisible()) {
-      this.root.blur();
-      this.root.style.display = "none";
+    if (this.element && this.isVisible()) {
+      this.element.blur();
+      this.element.style.display = "none";
       const customEvent = new CustomEvent('simplebox:show', { detail: this });
       document.dispatchEvent(customEvent);
     }
-  }
-
-  createWrapper(aStyle) {
-    const style = Object.assign({ // default wrapper style
-      position: "absolute",
-      top: "0px",
-      left: "0px",
-      width: "100%",
-      height: "100%",
-      zIndex: "99999"
-    }, aStyle);
-    return this.createElementWithStyle("div", style);
-  }
-
-  createTransparency(aStyle) {
-    const style = Object.assign({ // default transparency style
-      zIndex: "-1",
-      position: "absolute",
-      top: "0px",
-      left: "0px",
-      right: "0px",
-      bottom: "0px",
-      width: "100%",
-      height: "100%",
-      backgroundColor: "#888",
-      opacity: "0.3"
-    }, aStyle);
-    style.filter = 'alpha(opacity = ' + (parseFloat(style.opacity) * 100).toString() + ')';
-    return this.createElementWithStyle("div", style);
   }
 
   createElementWithStyle(aTagName, aStyle) {
@@ -175,14 +125,6 @@ class SimpleBox {
       element.style[key] = aStyle[key];
     });
     return element;
-  }
-
-  createPadding(aStyle) {
-    const style = Object.assign({ // default padding style
-      width: "100%",
-      height: "50%"
-    }, aStyle);
-    return this.createElementWithStyle("div", style);
   }
 
   createCloseButton(aStyle) {
@@ -201,8 +143,8 @@ class SimpleBox {
     return btn;
   }
 
-  rootVisible() {
-    return this.root.style.display != 'none';
+  isVisible() {
+    return this.element.style.display != 'none';
   }
 
 }

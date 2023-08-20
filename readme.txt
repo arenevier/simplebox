@@ -3,14 +3,8 @@ basically yet another [lightbox-clone][1]. It can be used to display any html
 content in a modal box. It can work with images, but also with videos, forms,
 etc.
 
-It uses prototype (minimal version: 1.7), and **does not need** script.aculo.us.
-
-When modal box is shown, it's automatically centered vertically. You can use
-css top and bottom margins if you want to modify this position. If you want to
-center the box horizontally, you need to manage that yourself with css.
-
-You can personalize background opacity and methods used to close simplebox with
-argument options. SimpleBox fires custom events when simplebox is shown or
-hidden: _simplebox:shown_ and _simplebox:hidden_ respectively.
+You can personalize methods used to close simplebox with argument options.
+SimpleBox fires custom events when simplebox is shown or hidden:
+_simplebox:shown_ and _simplebox:hidden_ respectively.
 
 [1]: http://planetozh.com/projects/lightbox-clones/
